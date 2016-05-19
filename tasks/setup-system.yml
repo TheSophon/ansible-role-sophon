@@ -1,0 +1,30 @@
+---
+- name: Ensure /app directory is created
+  file: path={{ webapps_dir }} state=directory
+
+- name: Ensure Nginx is installed
+  apt: name=nginx state=present
+
+- name: Ensure Git is installed
+  apt: name=git-core state=present
+
+- name: Ensure Supervisor is installed
+  apt: name=supervisor state=present
+  
+- name: Ensure Ansible is installed
+  apt: name=ansible state=present
+  
+- name: Ensure MySQL is installed
+  apt: name={{ item }} state=present
+  with_items:
+    - "mysql-server"
+    - "mysql-client"
+    - "libmysqlclient-dev"
+ 
+- name: Ensure Python related dependencies are installed
+  apt: name={{ item }} state=present
+  with_items:
+    - "python-pip"
+    - "python-virtualenv"
+    - "python-mysqldb"
+    - "python-dev"

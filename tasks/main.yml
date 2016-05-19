@@ -1,0 +1,6 @@
+---
+- include: setup-system.yml
+
+- include: setup-nodejs.yml
+
+- include: setup-sophon.yml

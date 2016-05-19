@@ -1,0 +1,6 @@
+---
+repo_remote: origin
+
+repo_version: master
+
+webapps_dir: /app

@@ -1,0 +1,24 @@
+---
+- name: Ensure repositories are cloned locally
+  git: repo={{ item.repo_url }} dest={{ webapps_dir }}/{{ item.app_name }} remote={{ repo_remote }} version={{ repo_version }}
+  with_items:
+    - { repo_url: 'https://github.com/TheSophon/sophon.git', app_name: 'sophon' }
+    - { repo_url: 'https://github.com/TheSophon/sophon-webapp.git', app_name: 'sophon-webapp' }
+
+- name: Ensure Python-mysqldb is installed
+  apt: name=python-mysqldb state=present
+
+- name: Ensure Sophon is installed
+  pip: name=file://{{ webapps_dir }}/{{ item.app_name }} virtualenv={{ webapps_dir }}/{{ item.app_name }}/venv state=present virtualenv_site_packages=yes
+  with_items:
+    - { app_name: 'sophon' }
+    
+- name: Ensure dependencies of sophon-web is installed 
+  npm: path={{ webapps_dir }}/{{ item.app_name }} registry=http://registry.cnpmjs.org/
+  with_items:
+    - { app_name: 'sophon-webapp' }
+    
+- name: Ensure sophon-web is built
+  command: npm run build chdir={{ webapps_dir }}/{{ item.app_name }}
+  with_items:
+    - { app_name: 'sophon-webapp' }
