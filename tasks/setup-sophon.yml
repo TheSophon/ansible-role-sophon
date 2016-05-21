@@ -8,15 +8,36 @@
 - name: Ensure Python-mysqldb is installed
   apt: name=python-mysqldb state=present
 
+- name: Ensure pip and setuptools is latest
+  pip: name={{ item.package_name }} virtualenv={{ webapps_dir }}/{{ item.app_name }}/venv state=latest
+  with_items:
+    - { app_name: "sophon", package_name: "pip" }
+    - { app_name: "sophon", package_name: "setuptools" }
+
 - name: Ensure Sophon is installed
   pip: name=file://{{ webapps_dir }}/{{ item.app_name }} virtualenv={{ webapps_dir }}/{{ item.app_name }}/venv state=present virtualenv_site_packages=yes
   with_items:
-    - { app_name: 'sophon' }
-    
+    - { app_name: "sophon" }
+
+- name: Ensure database has been created
+  mysql_db: name=sophon state=present
+
 - name: Ensure dependencies of sophon-web is installed 
   npm: path={{ webapps_dir }}/{{ item.app_name }} registry=http://registry.cnpmjs.org/
   with_items:
-    - { app_name: 'sophon-webapp' }
+    - { app_name: "sophon-webapp" }
+
+- name: Ensure the supervisor has been configured well
+  copy: src=./roles/ansible-role-sophon/files/supervisor/{{ item }} dest=/etc/supervisor/conf.d/
+  with_items:
+    - "sophon.conf"
+    - "sophon-cron.conf"
+
+- name: restart app
+  supervisorctl: name={{ item }} state=restarted
+  with_items:
+    - "sophon"
+    - "sophon-cron"
     
 - name: Ensure sophon-web is built
   command: npm run build chdir={{ webapps_dir }}/{{ item.app_name }}
