@@ -28,3 +28,5 @@
     - "python-virtualenv"
     - "python-mysqldb"
     - "python-dev"
+    - "libffi-dev"
+    - "libssl-dev"
