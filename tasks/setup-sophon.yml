@@ -27,13 +27,13 @@
   with_items:
     - { app_name: "sophon-webapp" }
 
-- name: Ensure the supervisor has been configured well
+- name: Ensure Supervisor has been configured well
   copy: src=./roles/ansible-role-sophon/files/supervisor/{{ item }} dest=/etc/supervisor/conf.d/
   with_items:
     - "sophon.conf"
     - "sophon-cron.conf"
 
-- name: restart app
+- name: Restart app
   supervisorctl: name={{ item }} state=restarted
   with_items:
     - "sophon"
@@ -43,3 +43,11 @@
   command: npm run build chdir={{ webapps_dir }}/{{ item.app_name }}
   with_items:
     - { app_name: 'sophon-webapp' }
+
+- name: Ensure Nginx has been configured well
+  copy: src=./roles/ansible-role-sophon/files/nginx/{{ item }} dest=/etc/nginx/conf.d/
+  with_items:
+    - "sophon.conf"
+
+- name: Restart Nginx
+  service: name=nginx state=restarted
