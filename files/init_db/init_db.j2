@@ -1,0 +1,22 @@
+#!/bin/env python2
+# -*- coding: utf-8 -*-
+
+
+from sophon import database
+from sophon.models import UserMeta
+
+
+def init_db():
+    database.init_db()
+    if not UserMeta.query.first():
+        admin = UserMeta(
+            username="admin", user_type=1,
+            password="admin", public_key={{ remote_public_key_path }}
+        )
+        database.session.add(admin)
+        database.session.commit()
+        database.session.close()
+
+
+if __name__ == "__main__":
+    init_db()

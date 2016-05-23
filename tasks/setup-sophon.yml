@@ -33,21 +33,38 @@
     - "sophon.conf"
     - "sophon-cron.conf"
 
-- name: Restart app
-  supervisorctl: name={{ item }} state=restarted
-  with_items:
-    - "sophon"
-    - "sophon-cron"
-    
 - name: Ensure sophon-web is built
   command: npm run build chdir={{ webapps_dir }}/{{ item.app_name }}
   with_items:
-    - { app_name: 'sophon-webapp' }
+    - { app_name: "sophon-webapp" }
+
+- name: Stop app
+  supervisorctl: name={{ item }} state=stopped
+  with_items:
+    - "sophon"
+    - "sophon-cron"
 
 - name: Ensure Nginx has been configured well
   copy: src=./roles/ansible-role-sophon/files/nginx/{{ item }} dest=/etc/nginx/conf.d/
   with_items:
     - "sophon.conf"
+
+- name: Ensure public key has been placed
+  copy: src={{ local_public_key_directory_path }}/{{ public_key_filename }} dest={{ remote_public_key_directory_path }}/{{ public_key_filename }}
+
+- name: Ensure init_db.py has been placed
+  template: src=./roles/ansible-role-sophon/files/init_db/init_db.j2 dest=/tmp/init_db.py
+
+- name: Ensure database has been initialized
+  command: /{{ webapps_dir }}/{{ item }}/venv/bin/python /tmp/init_db.py
+  with_items:
+    - "sophon"
+
+- name: Restart app
+  supervisorctl: name={{ item }} state=restarted
+  with_items:
+    - "sophon"
+    - "sophon-cron"
 
 - name: Restart Nginx
   service: name=nginx state=restarted
