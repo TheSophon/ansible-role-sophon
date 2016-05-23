@@ -4,3 +4,5 @@ repo_remote: origin
 repo_version: master
 
 webapps_dir: /app
+
+remote_public_key_path: "\"{{ remote_public_key_directory_path }}/{{ public_key_filename }}\""
