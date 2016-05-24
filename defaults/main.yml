@@ -1,6 +1,10 @@
 ---
-local_public_key_directory_path: ""
+local_public_key_directory_path: "/tmp"
 
-remote_public_key_directory_path: ""
+remote_public_key_directory_path: "/tmp"
 
-public_key_filename: ""
+public_key_filename: "test_key.pub"
+
+admin_username: "admin"
+
+admin_password: "admin"

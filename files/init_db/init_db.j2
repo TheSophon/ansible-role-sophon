@@ -10,8 +10,8 @@ def init_db():
     database.init_db()
     if not UserMeta.query.first():
         admin = UserMeta(
-            username="admin", user_type=1,
-            password="admin", public_key={{ remote_public_key_path }}
+            username="{{ admin_username }}", user_type=1,
+            password="{{ admin_password }}", public_key={{ remote_public_key_path }}
         )
         database.session.add(admin)
         database.session.commit()
