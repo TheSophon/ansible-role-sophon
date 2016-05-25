@@ -14,8 +14,13 @@
     - { app_name: "sophon", package_name: "pip" }
     - { app_name: "sophon", package_name: "setuptools" }
 
+- name: Ensure Sophon has been configured
+  template: src=./roles/ansible-role-sophon/files/sophon/config.j2 dest={{ webapps_dir }}/{{ item }}/{{ item }}/config.py
+  with_items:
+    - "sophon"
+
 - name: Ensure Sophon is installed
-  pip: name=file://{{ webapps_dir }}/{{ item.app_name }} virtualenv={{ webapps_dir }}/{{ item.app_name }}/venv state=present virtualenv_site_packages=yes
+  pip: name=file://{{ webapps_dir }}/{{ item.app_name }} virtualenv={{ webapps_dir }}/{{ item.app_name }}/venv state=latest virtualenv_site_packages=yes
   with_items:
     - { app_name: "sophon" }
 
@@ -45,9 +50,12 @@
     - "sophon-cron"
 
 - name: Ensure Nginx has been configured well
-  copy: src=./roles/ansible-role-sophon/files/nginx/{{ item }} dest=/etc/nginx/conf.d/
+  template: src=./roles/ansible-role-sophon/files/nginx/{{ item }} dest=/etc/nginx/conf.d/
   with_items:
     - "sophon.conf"
+
+- name: Ensure Nginx default site has been removed
+  file: path=/etc/nginx/sites-enabled/default state=absent
 
 - name: Ensure public key has been placed
   copy: src={{ local_public_key_directory_path }}/{{ public_key_filename }} dest={{ remote_public_key_directory_path }}/{{ public_key_filename }}

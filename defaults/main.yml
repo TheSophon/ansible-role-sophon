@@ -8,3 +8,7 @@ public_key_filename: "test_key.pub"
 admin_username: "admin"
 
 admin_password: "admin"
+
+nginx_listen: "80 default_server"
+
+cookie_sercret: ".wwwpsgx.ktsy.o].b[jrdexye[bumys"
