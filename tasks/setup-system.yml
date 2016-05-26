@@ -11,9 +11,6 @@
 - name: Ensure Supervisor is installed
   apt: name=supervisor state=present
   
-- name: Ensure Ansible is installed
-  apt: name=ansible state=present
-  
 - name: Ensure MySQL is installed
   apt: name={{ item }} state=present
   with_items:
@@ -30,3 +27,12 @@
     - "python-dev"
     - "libffi-dev"
     - "libssl-dev"
+
+- name: Ensure global pip and setuptools is latest
+  pip: name={{ item }} state=latest
+  with_items:
+    - "pip"
+    - "setuptools"
+
+- name: Ensure global Ansible is installed
+  pip: name=ansible state=latest
