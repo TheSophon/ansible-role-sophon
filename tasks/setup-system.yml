@@ -10,6 +10,9 @@
 
 - name: Ensure Supervisor is installed
   apt: name=supervisor state=present
+
+- name: Ensure Supervisor is started
+  service: name=supervisor state=started
   
 - name: Ensure MySQL is installed
   apt: name={{ item }} state=present
@@ -17,6 +20,9 @@
     - "mysql-server"
     - "mysql-client"
     - "libmysqlclient-dev"
+
+- name: Ensure MySQL is started
+  service: name=mysql state=started
  
 - name: Ensure Python related dependencies are installed
   apt: name={{ item }} state=present
