@@ -38,6 +38,11 @@
     - "sophon.conf"
     - "sophon-cron.conf"
 
+- name: Ensure ansible.cfg has been placed well
+  copy: src=./roles/ansible-role-sophon/files/ansible/ansible.cfg dest=/app/{{ item }}/
+  with_items:
+    - "sophon"
+
 - name: Ensure sophon-web is built
   command: npm run build chdir={{ webapps_dir }}/{{ item.app_name }}
   with_items:
