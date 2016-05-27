@@ -11,4 +11,4 @@ admin_password: "admin"
 
 nginx_listen: "80 default_server"
 
-cookie_sercret: ".wwwpsgx.ktsy.o].b[jrdexye[bumys"
+cookie_secret: ".wwwpsgx.ktsy.o].b[jrdexye[bumys"
